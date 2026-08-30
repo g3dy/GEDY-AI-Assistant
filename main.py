@@ -1,7 +1,10 @@
 import os
 import eel
 import webbrowser
+from engine.features import *
 
+# Playing countdown
+playCountDownSound()
 
 # function to specify where our frontend files are located
 eel.init('www/assets')
