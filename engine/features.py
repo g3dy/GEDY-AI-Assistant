@@ -3,6 +3,8 @@ import eel
 from engine.command import *
 from engine.config import ASSISTANT_NAME 
 import os
+import pywhatkit as kit
+import re
 
 # The function for playing countdown sound
 def playCountDownSound() :
@@ -31,3 +33,20 @@ def openCommand(query) :
         speak(f"{query} not found")
 
 # WILL CHANGE THE OS MODULE SINCE ITS DEPRACETED
+
+# Adding function to play a Youtube video
+
+def PlayYoutube(query) :
+    search_term = extract_yt_term(query)
+    if search_term:
+        speak(f"Playing {search_term} on YouTube")
+        kit.playonyt(search_term)
+
+    else:
+        speak("Sorry, I couldn't find what to play on YouTube")
+
+def extract_yt_term(command):
+    pattern = r'play\$+(.*?)\$+on\$+youtube'
+    match = re.search(pattern, command, re.IGNORECASE)
+    return match.group(1) if match else None
+# This functon extracts the dynamic term from a youtube query 
