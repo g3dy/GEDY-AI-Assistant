@@ -27,7 +27,7 @@ def takeCommand() :
         eel.DisplayMessage("Recognizing...")
         query = sr.recognize_google(audio, lan="en")
         print(f"User said: {query}")
-        speak(query)
+        # speak(query)
         eel.DisplayMessage(query)
         eel.ShowHood()
 
@@ -40,3 +40,18 @@ def takeCommand() :
 # text = takeCommand()
 
 # speak(text)
+
+# ---- This part is made to access all functions. and this is where the 'commands' we give our assistant will be implemented.
+@eel.expose
+def allCommand() :
+    query = takeCommand()
+    print(query)
+
+    # Implementing the "OPEN" command; where when the user says "OPEN".... the task will be archieved
+    if "open" in query:
+        # print("Success") # Testing was successful
+        from engine.features import openCommand
+        openCommand(query)
+
+    else:
+        print("Ooops") #Testing the command

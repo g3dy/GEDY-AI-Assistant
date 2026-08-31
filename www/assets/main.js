@@ -45,7 +45,7 @@ $(document).ready(function () {
         $('#oval').attr("hidden", true);
         $('#SiriWave').attr("hidden", false);
         eel.micClickSound();
-        eel.takeCommand()();
+        eel.allCommand()();
     })
 
 });
