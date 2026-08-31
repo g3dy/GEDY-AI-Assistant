@@ -40,10 +40,12 @@ $(document).ready(function () {
         },
     });
 
+    // This is the mic event handler
     $('#micBtn').click(function() {
         $('#oval').attr("hidden", true);
         $('#SiriWave').attr("hidden", false);
         eel.micClickSound();
+        eel.takeCommand()();
     })
 
 });

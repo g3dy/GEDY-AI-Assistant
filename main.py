@@ -2,6 +2,7 @@ import os
 import eel
 import webbrowser
 from engine.features import *
+from engine.command import *
 
 # Playing countdown
 playCountDownSound()
