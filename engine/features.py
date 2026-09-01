@@ -1,3 +1,5 @@
+import webbrowser
+
 from playsound import playsound as playsound
 import eel
 from engine.command import *
@@ -5,6 +7,7 @@ from engine.config import ASSISTANT_NAME
 import os
 import pywhatkit as kit
 import re
+from engine.db import *
 
 # The function for playing countdown sound
 def playCountDownSound() :
@@ -22,15 +25,38 @@ def micClickSound() :
 
 def openCommand(query) :
     query = query.replace(ASSISTANT_NAME, "")
-    query = query.replace("open", "")
-    query.lower()
+    query = query.replace("open", "").strip().lower()
 
-    if query != "" :
-        speak(f"Opening {query}")
-        os.system('Start ' + query)
 
-    else:
-        speak(f"{query} not found")
+    if query != "":
+        try:
+            # Tries to find the application is sys_command table
+            cursor.execute('SELECT path FROM sys_command WHERE LOWER(name) = ?', (query,))
+            results = cursor.fetchall()
+
+            if len(results) != 0:
+                speak("Opening " + query)
+                os.startfile(results[0][0])
+                return
+
+            # If not found, try to find the command in the web_command table
+            cursor.execute('SELECT url FROM web_command WHERE LOWER(name) = ?', (query,))
+            results = cursor.fetchall()
+
+            if len(results) != 0:
+                speak("Opening " + query)
+                webbrowser.open(results[0][0])
+                return
+
+            # This is for if still the path is not found in the database we use the os mode
+            speak("Opening " + query)
+            try:
+                os.system('start ' + query)
+            except Exception as e:
+                speak(f"Unable to open {query}. Error: {str(e)}")
+
+        except Exception as e:
+            speak(f"Something went wrong: {str(e)}")
 
 # WILL CHANGE THE OS MODULE SINCE ITS DEPRACETED
 
