@@ -9,12 +9,17 @@ import pywhatkit as kit
 import re
 from engine.db import *
 
+####################
+import subprocess
+import shutil
+####################
+
 # The function for playing countdown sound
 def playCountDownSound() :
     sound_dir = "www\\assets\\audio\\count-down.mp3"
     playsound(sound_dir)
 
-# Allowing function to be accessed at JS file
+# Allowing function to be accessed at the JS file
 @eel.expose
 # click sound for mic button
 def micClickSound() :
@@ -30,7 +35,7 @@ def openCommand(query) :
 
     if query != "":
         try:
-            # Tries to find the application is sys_command table
+            # Trying to find the application is sys_command table
             cursor.execute('SELECT path FROM sys_command WHERE LOWER(name) = ?', (query,))
             results = cursor.fetchall()
 
@@ -72,7 +77,23 @@ def PlayYoutube(query) :
         speak("Sorry, I couldn't find what to play on YouTube")
 
 def extract_yt_term(command):
-    pattern = r'play\$+(.*?)\$+on\$+youtube'
+
+    pattern = r'play\s+(.*?)\s+on\s+youtube'
     match = re.search(pattern, command, re.IGNORECASE)
-    return match.group(1) if match else None
-# This functon extracts the dynamic term from a youtube query 
+    return match.group(1) if match else None 
+
+####################################################################
+
+# Trying to implement sounddevice instead of pyaudio since its deprecated
+def execute_voice_command(spoken_text):
+    command = spoken_text.lower().replace("open", "").strip()
+
+    app_path = shutil.which(command)
+
+    if app_path:
+        print(f"Opening {command}...")
+        speak(f"Opening {command}...")
+        subprocess.Popen([app_path])
+    else:
+        print(f"Sorry, could not find application named: {command}")
+        speak(f"Sorry, could not find application named: {command}")
